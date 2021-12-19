@@ -4,6 +4,10 @@ import ProCard from '@ant-design/pro-card';
 import '@ant-design/pro-card/dist/card.css';
 import { LoadingDataType, StoreType } from '../../types/propsTypes';
 import { AnyIfEmpty, connect } from 'react-redux';
+import axios, { AxiosResponse } from 'axios';
+import { PATH } from '../../types/actionTypes';
+import MyScatterChart from './DataVisual/MyScatterChart';
+import MyWordsCloud from './DataVisual/MyWordsCloud';
 
 
 interface DataPreprocessingProps {
@@ -11,7 +15,8 @@ interface DataPreprocessingProps {
 }
 interface DataPreprocessingState {
   inputValue:number,
-  selectButton:String
+  selectButton:String,
+  completeArray:Array<number>
 }
 class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocessingState>{
   public constructor(props: DataPreprocessingProps) {
@@ -21,7 +26,8 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
       // textData:[],
       // completeArray:[],
       // markTextData:[],
-      selectButton:""
+      selectButton:"",
+      completeArray:[]
     }
   }
 
@@ -38,24 +44,9 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
   public render(): JSX.Element {
     const {Option} = Select
     const { inputValue } = this.state;
-    const { dictionarySelectObject } = this.props.LoadingDataCom
-
-    const dataSource = [
-      {
-        key: '1',
-        name: '同义词字典',
-        description: '电力领域同义词词典',
-        words: '1000',
-        dicts: '100Kb',
-      },
-      {
-        key: '2',
-        name: '设备字典',
-        description: '发电设备字典',
-        words: '800',
-        dicts: '80Kb',
-      },
-    ];
+    const { dictionarySelectObject ,textsSelectObject} = this.props.LoadingDataCom
+    // const {} = this.props
+    
 
     const columns = [
       {
@@ -122,7 +113,32 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
             labelCol={{span:12,offset:0}}
             colon={false}
             onFinish={(valueList:any) => {
-              console.log("valueList",valueList)
+              console.log("valueList",valueList,textsSelectObject)
+              const { selectedRows  } = textsSelectObject as {
+                selectedRowKeys?: any[] ;
+                selectedRows?: any[] ;
+              }
+               (selectedRows as any[]).forEach((value:any,index:number,array:any[]) => {
+                let postObject = {
+                  textsKey:value.key,
+                  numberOfClusters:valueList.clusteringParameters,
+                  sentenceVectorDimension:valueList.vectorDimension
+                }
+                
+                console.log("postObject",postObject)
+                axios.post(`${PATH}/mongo/utils/dbSentenceVecScatter`,postObject).then((res:AxiosResponse<any,any>) => {
+                  if(res.data.status === 200 ){
+                    message.success("dec2vec模型调用成功") 
+
+                    // axios
+                  }
+                })
+              })
+              // let postObject = {
+              //   "textsKey": textsSelectObject.,
+              //   "numberOfClusters": 0,
+              //   "sentenceVectorDimension": 0
+              // }
             }}
           >
             <Row>
@@ -140,7 +156,8 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
                 >
                   <Select
                     // defaultValue={"dec2Vec"}
-                    
+                    // defaultValue={"dec2Vec"}
+                    // labelInValue
                   >
                     {/* <Select.Option value="dec2Vec">dec2Vec</Select.Option> */}
                     <Option 
@@ -163,7 +180,7 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
               </Col>
               <Col span={8}>
                 <Form.Item
-
+                
                   // labelCol={{span:0,offset:0}}
                   wrapperCol={{span:0,offset:6}}
                 >
@@ -197,7 +214,9 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
                   key={"clusteringParameters"}
                   name={"clusteringParameters"}
                 >
-                  <Input></Input>
+                  <Input 
+                    // defaultValue={10}
+                  ></Input>
                 </Form.Item>
               </Col>
 
@@ -264,7 +283,12 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
                 >
                 <Button style={{ marginLeft: '5%', borderRadius: '5px', width: '80px', backgroundColor: 'rgb(0,68,107)', border: 'rgb(0,68,107)', color: 'white' }}
                   onClick={() => {
-                    console.log("button",this.state.inputValue)
+                    // console.log("button",this.state.inputValue,
+                    // textsSelectObject?.selectedRows)
+                    axios.get(`${PATH}/mongo/texts/all`).then((res:AxiosResponse<any,any>) => {
+                      const allTexts =  res.data.data.data
+                        
+                    })
                   }}
                 >采样</Button>
                 </Form.Item>
@@ -299,8 +323,12 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
             <ProCard 
               split='vertical'
             >
-              <ProCard>scatter</ProCard>
-              <ProCard>wordCloud</ProCard>
+              <ProCard>
+                <MyScatterChart></MyScatterChart>
+              </ProCard>
+              <ProCard>
+                <MyWordsCloud></MyWordsCloud>
+              </ProCard>
             </ProCard>
           </ProCard.TabPane>
           <ProCard.TabPane key="result" tab="数据结果">

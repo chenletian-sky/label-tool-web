@@ -14,3 +14,7 @@
   min-height: 270px !important;
   max-height: 270px !important;
 }
+.dict-left a{
+  width: 25px !important;
+  white-space:nowrap !important; 
+}
