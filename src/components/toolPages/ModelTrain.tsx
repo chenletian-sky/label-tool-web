@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import ReactEcharts from 'echarts-for-react';  //下载
 import * as echarts from 'echarts';
+import Qs from 'qs'
 //antd组件库
 import {Button, Table, Form, Input, Slider,Space, message} from 'antd';
 import '../current/current'
@@ -19,8 +20,8 @@ interface ModelTrainState {
 
 class ModelTrain extends Component<ModelTrainProps, ModelTrainState>{
   state = {
-    currentRate:[94,95,96],
-    historyRate:[95,95.3,95.8,96,96.2],
+    currentRate:[],
+    historyRate:[],
     iterNum:2,
 
   }
@@ -44,7 +45,6 @@ class ModelTrain extends Component<ModelTrainProps, ModelTrainState>{
         xSeries.push(i+1)
       }
     }
-    
     
     const option: EChartsOptions = {
         title: {
@@ -97,23 +97,25 @@ class ModelTrain extends Component<ModelTrainProps, ModelTrainState>{
       message.warning("未输入迭代次数")
       return ;
     }
+    const sendInfor = {textsKey:"32232",numberOfTrainingIterations:Number(inputIterNum)}
     axios({
-      timeout: 4000,
-      method:'get',
+      timeout: 400000,
+      method:'post',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
-      // url:"http://101.35.15.228:8080/mongo/utils/jiaguTrainModel",    
+      url:"http://101.35.15.228:8080/mongo/utils/jiaguTrainModel",    
+      data: Qs.stringify(sendInfor)
     })
       .then((res)=>{
-        console.log(res.data.data.dictionaries);
-
-        if (res.data.data.dictionaries.length <=0) {
-          return ;
-        }else{
-          // 
-          // this.setState({dataSource:res.data.data.dictionaries,firstGetState:true})
-        }
+        const {data} = res.data;
+        const currentRate = (data[0] as string).split("\r\n").map((item:string) =>{
+          return Number(item);
+        } )
+        console.log(currentRate);
+        currentRate.pop()
+        const {historyRate}  =this.state ;
+        this.setState({currentRate:[...currentRate],historyRate:[...historyRate,currentRate[currentRate.length -1 ]]})
       message.success("训练成功")
     })
       .catch((error)=>{
@@ -136,7 +138,8 @@ class ModelTrain extends Component<ModelTrainProps, ModelTrainState>{
             rules={[{ required: true}]}
             style={{width: '25rem', marginLeft: '-4.1rem'}}
           >
-            <Input />
+            {/*  */}
+            <Input value="LSTM + AveragePerceptron"  />  
             <Button
               type="primary"
               onClick={this.handelTrain}
@@ -149,7 +152,11 @@ class ModelTrain extends Component<ModelTrainProps, ModelTrainState>{
             rules={[{ required: true}]}
             style={{width:'20rem', marginLeft: '1rem', marginTop: '1.8rem', position: 'absolute'}}
           >
-            <Input ref={a=>this.inputIterNum =  a} />
+            <Input ref={a=>this.inputIterNum =  a} onKeyUp={(e)=>{
+              const tranValue = (e.target as any).value;
+              // console.log(tranValue)
+              (e.target as any).value = tranValue.replace(/^[^0-9]|[^\d]+/g,'')
+            }}  />
           </Form.Item>
           <Form.Item
             label="权重保存路径"
