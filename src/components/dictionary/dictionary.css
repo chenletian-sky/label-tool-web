@@ -1,0 +1,16 @@
+.spanCss{
+  position: relative;
+  display: block;
+  width: 5rem;
+  top: -0.8rem;
+  left: 1rem;
+  background: white;
+}
+.dictRight .ant-table {
+  min-height: 480px !important;
+  max-height: 480px !important;
+}
+.dict-left .ant-table {
+  min-height: 270px !important;
+  max-height: 270px !important;
+}
