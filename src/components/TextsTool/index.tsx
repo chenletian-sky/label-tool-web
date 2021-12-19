@@ -9,7 +9,7 @@ import Qs from 'qs'
 import axios from 'axios';
 import React, { Component } from 'react'
 import { AddIcon, CircleIcon, LabelIcon, SaveIcon } from '../Icon';
-
+// sda
 import './index.css'
 
 interface Props {
@@ -80,7 +80,7 @@ export default class TextsTool extends Component<Props, stateType> {
             return ;
           }else{
             this.setState({dataSource:res.data.data.texts,firstGetState:true},()=>{
-            setTimeout(()=>{message.success("成功加载语料数据")},1000)
+            // setTimeout(()=>{message.success("成功加载语料数据")},1000)
           })
           }
         })
@@ -107,21 +107,21 @@ export default class TextsTool extends Component<Props, stateType> {
         title: '字典描述',
         dataIndex: 'textsDescribe',
         key: 'textsDescribe',
-        width:"35%",
+        width:"30%",
         align: 'center',
       },
       {
         title: '包含词量',
         dataIndex: 'wordsNum',
         key: 'words',
-        width:"15%",
+        width:"25%",
         align: 'center',
       },
       {
         title: '字典容量',
         dataIndex: 'textsContent',
         key: 'dicts',
-        width:"15%",
+        width:"20%",
         align: 'center',
       },
       {
@@ -131,8 +131,8 @@ export default class TextsTool extends Component<Props, stateType> {
         width:"15%",
         align: 'center',
         render: (elem:any,row:any,index:number) => {
-          return <Space  size={1}>
-          <Button style={{ color: 'steelblue',margin:"0px",border:"0px"}} onClick={(e)=>{
+          return <Space  size={5}>
+          <a style={{ color: 'steelblue',margin:"0px",border:"0px"}} onClick={(e)=>{
             Modal.confirm({
               title: "更新字典名字",
               icon: <ExclamationCircleOutlined />,
@@ -165,8 +165,8 @@ export default class TextsTool extends Component<Props, stateType> {
                 message.success("取消更新")
               },
             })
-          }} >更新</Button>
-          <Button style={{ color: 'steelblue',margin:"0px",border:"0px"}} onClick={(e)=>{
+          }} >更新</a>
+          <a style={{ color: 'steelblue',margin:"0px",border:"0px"}} onClick={(e)=>{
             // console.log(index);
             const {dataSource,showDataKey} = this.state;
             for(let i=0;i<dataSource.length;i++){
@@ -177,12 +177,12 @@ export default class TextsTool extends Component<Props, stateType> {
                 break;
               }
             }
-          }} >查看</Button>
-          <Button style={{ color: 'steelblue',margin:"0px",border:"0px"}} onClick={(e)=>{
+          }} >查看</a>
+          <a style={{ color: 'steelblue',margin:"0px",border:"0px"}} onClick={(e)=>{
             const textString:string = this.state.dataSource[this.state.showDataKey].data.map((data=>data.text)).join("\r\n")
             saveAs(new Blob([textString], {type: 'text/plain;charset=utf-8'}), `data.txt`);
             message.success("文件导出成功!",1)
-          }} >导出</Button>
+          }} >导出</a>
         </Space>
         },
       },
@@ -198,7 +198,7 @@ export default class TextsTool extends Component<Props, stateType> {
     const {data} = this.state.dataSource[this.state.showDataKey];
     const {showDataKey} = this.state;
     return(
-      <div style={{backgroundColor:'white', marginTop:'-0.8rem', marginLeft:'-0.8rem', width:'90rem', height:'40rem'}}>
+      <div style={{backgroundColor:'white', marginTop:'0.5rem', marginLeft:'0.5rem', width:'90rem', height:'40rem'}}>
         <Spin 
           tip="获取数据中"
           spinning={!this.state.firstGetState}
@@ -219,33 +219,65 @@ export default class TextsTool extends Component<Props, stateType> {
                 autoComplete="off"
                 onFinish={(value:any)=> {
                   console.log("dictFinish",value)
-                  const { dictName:textsName,textsDescribe } = value ;
-                  const fileByRead = value['inputFile']
-                  const reader = new FileReader(); 
-                  const textsContent = String((value['inputFile'][0].size / 1024).toFixed(2) + " KB") ;
-                  // console.log(textsContent);
-                  reader.readAsText(fileByRead[0].originFileObj); 
-                  //读取文件的内容
-                  reader.onload = () => {
-                    const { result } = reader;
-                    const newData : Array<string> = (result as string).split('\r\n'); 
-                    let wordsNum = 0;
-                    const newNewData:Array<{key:number,text:string,label:any[],textArr:any[]}> = []
-                    const usedTexts:string[] = [];
-                    // 实现语料数据的初步去重
-                    for(let i =0;i<newData.length;i++){
-                      wordsNum += newData[i].length ;
-                      if(!usedTexts.includes(newData[i]))
-                        newNewData.push({key:newNewData.length,text:newData[i],label:[],textArr:[]});
-                        usedTexts.push(newData[i])
-                      }
-                    console.log(newNewData.length,usedTexts.length);
-                    const {dataSource} = this.state;
-                    const newUploadData = {key:String(dataSource.length + 1),textsName,textsDescribe,wordsNum:String(wordsNum),textsContent,data:newNewData }
-                    this.setState({newUploadData})
-                    // this.setState({
-                    //   dataSource:[{key:String(dataSource.length + 1),dictName,textsDescribe,wordsNum:String(wordsNum),textsContent,data:newNewData },...dataSource],
-                    // })
+                  const nowType = value.inputFile[0].type;
+
+                  if(nowType === "text/plain"){
+
+                    const { dictName:textsName,textsDescribe } = value ;
+                    const fileByRead = value['inputFile']
+                    const reader = new FileReader(); 
+                    const textsContent = String((value['inputFile'][0].size / 1024).toFixed(2) + " KB") ;
+                    reader.readAsText(fileByRead[0].originFileObj); 
+                    //读取文件的内容
+                    reader.onload = () => {
+                      const { result } = reader;
+                      const newData : Array<string> = (result as string).split('\r\n'); 
+                      let wordsNum = 0;
+                      const newNewData:Array<{key:number,text:string,label:any[],textArr:any[]}> = []
+                      const usedTexts:string[] = [];
+                      // 实现语料数据的初步去重
+                      for(let i =0;i<newData.length;i++){
+                        wordsNum += newData[i].length ;
+                        if(!usedTexts.includes(newData[i]))
+                          newNewData.push({key:newNewData.length,text:newData[i],label:[],textArr:[]});
+                          usedTexts.push(newData[i])
+                        }
+                      console.log(newNewData.length,usedTexts.length);
+                      const {dataSource} = this.state;
+                      const newUploadData = {key:String(dataSource.length + 1),textsName,textsDescribe,wordsNum:String(wordsNum),textsContent,data:newNewData }
+                      this.setState({newUploadData})
+                    }
+
+                  }else if(nowType === 'application/pdf'){
+                    console.log("pdf文件")
+                    const { dictName:textsName,textsDescribe } = value ;
+                    const fileByRead = value['inputFile']
+                    const reader = new FileReader(); 
+                    const textsContent = String((value['inputFile'][0].size / 1024).toFixed(2) + " KB") ;
+                    reader.readAsBinaryString(fileByRead[0].originFileObj)
+                    
+                    reader.onload = ()=>{
+                        const { result } = reader;
+                        // console.log(textsContent,result);
+                        if(result){
+                          // 把数据写入到里面
+                          // this.runPdfExe(result);
+
+                          axios({
+                            timeout: 10000,
+                            method:'post',
+                            headers: {
+                              'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            url:"http://101.35.15.228:8080/mongo/dictionaries/transPdf",
+                            data: Qs.stringify({data:result})
+                          })
+                          .then((res)=>{
+                            console.log(res)
+                          })
+                          .catch((error)=>{console.log(error)})
+                        }
+                    }
                   }
                   message.success("数据校验成功")
                 }}
@@ -281,11 +313,12 @@ export default class TextsTool extends Component<Props, stateType> {
             >
               <Upload
                 showUploadList = {false}
-                accept='.txt'
+                // accept='.txt'
                 beforeUpload = {(file)=>{
                   const isType = 
                     file.type === 'text/plain'
-                    isType ? message.success("上传成功!") : message.error("上传文件只支持txt类型")
+                    || file.type === 'application/pdf'
+                    isType ? message.success("上传成功!") : message.error("上传文件只支持txt或pdf类型")
                   return isType
                 }}
                 >
