@@ -13,7 +13,7 @@ import './current.css';
 // import {textsLoadData} from '../../types/propsTypes'
 
 interface CurrentState{
-
+  flag: number
 }
 
 interface CurrentProps{
@@ -24,7 +24,7 @@ export default class Current extends Component<CurrentProps, CurrentState>{
   public constructor(props: CurrentProps) {
     super(props)
     this.state = {
-      path:'loadingData'
+      flag: -1
     }
   }
 
@@ -38,6 +38,8 @@ export default class Current extends Component<CurrentProps, CurrentState>{
   }
 
   public render(): JSX.Element {
+    const ButtonName = ["加载数据/字典", "数据预处理", "手工标注", "训练模型", "语料识别", "数据导出"]
+    const NavLinkPath = ['loadingData', 'PreTreatmentData', 'HandLabel', 'ModelTrain', 'WordRecognition', 'ExportData']
     return(
       <div style={{width:'90rem', height:'40rem', marginTop:'-0.8rem', marginLeft:'-0.8rem', backgroundColor:'white', zIndex:'0', position:'absolute'}}>
         <div style={{width: '32rem',
@@ -54,16 +56,25 @@ export default class Current extends Component<CurrentProps, CurrentState>{
               <rect x="3%" y="28.5%" width="33%" height="45%" stroke='black' fill='none'></rect>
               <rect x="63%" y="43.5%" width="33%" height="30%" stroke='black' fill='none'></rect>
               <rect x="36%" y="28.5%" width="27%" height="45%" strokeWidth='0.2rem' stroke='white' fill='none'></rect>
-              {/* <line x1="63%" x2="63%" y1="43.5%" y2="47.5%" stroke='black'></line> */}
             </svg>
           </div>
           <div style={{width:"32rem", height:"36rem", zIndex:"3"}}>
-            <NavLink to={'loadingData'} ><Button className="buttonCss">加载数据/字典</Button></NavLink>
-            <NavLink to={'PreTreatmentData'}><Button className="buttonCss">数据预处理</Button></NavLink>
-            <NavLink to={'HandLabel'}><Button className="buttonCss">手工标注</Button></NavLink>
-            <NavLink to={'ModelTrain'}><Button className="buttonCss">训练模型</Button></NavLink>
-            <NavLink to={'WordRecognition'}><Button className="buttonCss">语料识别</Button></NavLink>
-            <NavLink to={'ExportData'}><Button className="buttonCss">数据导出</Button></NavLink>
+            {
+              ButtonName.map((s, index) => (
+                <NavLink key={s+index} to={NavLinkPath[index]}>
+                  <Button
+                    key={index}
+                    className="buttonCss"
+                    type={`${this.state.flag === index ? "primary": "default"}`}
+                    onClick = {
+                      () => {
+                        this.setState({flag: index})
+                      }
+                    }
+                  >{s}</Button>
+                </NavLink>
+              ))
+            }
           </div>
         </div>
         <div style={{width:"45rem", height:"36.5rem", border: '0.1rem solid gray', marginTop:'2rem', marginLeft:'36rem', position:'absolute'}}>
