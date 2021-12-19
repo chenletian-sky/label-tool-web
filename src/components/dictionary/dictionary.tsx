@@ -90,7 +90,7 @@ export default class Dictionary extends React.Component {
           }else{
             this.setState({dataSource:res.data.data.dictionaries,firstGetState:true},()=>{
             setTimeout(()=>{
-              message.success("成功加载字典数据")
+              // message.success("成功加载字典数据")
             },1000)
           })
           }

@@ -80,7 +80,7 @@ export default class TextsTool extends Component<Props, stateType> {
             return ;
           }else{
             this.setState({dataSource:res.data.data.texts,firstGetState:true},()=>{
-            setTimeout(()=>{message.success("成功加载语料数据")},1000)
+            // setTimeout(()=>{message.success("成功加载语料数据")},1000)
           })
           }
         })
