@@ -125,26 +125,27 @@ export default class Dictionary extends React.Component {
         title: '包含词量',
         dataIndex: 'wordsNum',
         key: 'words',
-        width:"15%",
+        width:"25%",
         align: 'center',
       },
       {
         title: '字典容量',
         dataIndex: 'dictsContent',
         key: 'dicts',
-        width:"15%",
+        width:"20%",
         align: 'center',
       },
       {
         title: '操作',
         dataIndex: 'functions',
         key: 'functions',
-        width:"20%",
+        width:"5%",
         align: 'center',
         render: (elem:any,row:any,index:number) => {
           // console.log(elem,rows);
-          return <Space  size={1}>
-          <Button style={{ color: 'steelblue',margin:"0px",border:"0px"}} onClick={(e)=>{
+          return <Space  size={5}>
+
+          <a style={{ color: 'steelblue',margin:"0px",border:"0px",width:"50px"}} onClick={(e)=>{
             Modal.confirm({
               title: "更新字典名字",
               icon: <ExclamationCircleOutlined />,
@@ -193,8 +194,8 @@ export default class Dictionary extends React.Component {
               },
             })
 
-          }} >更新</Button>
-          <Button style={{ color: 'steelblue',margin:"0px",border:"0px"}} onClick={(e)=>{
+          }} >更新</a>
+          <a style={{ color: 'steelblue',margin:"0px",border:"0px"}} onClick={(e)=>{
             const {dataSource,showDataKey} = this.state;
             for(let i=0;i<dataSource.length;i++){
               if(row.key as string === dataSource[i].key as string){
@@ -206,8 +207,8 @@ export default class Dictionary extends React.Component {
               }
             }
             
-          }} >查看</Button>
-          <Button style={{ color: 'steelblue',margin:"0px",border:"0px"}} onClick={(e)=>{
+          }} >查看</a>
+          <a style={{ color: 'steelblue',margin:"0px",border:"0px"}} onClick={(e)=>{
             const {data} = this.state.dataSource[index];
             // console.log(this.state.dataSource[0].data);
             var filename = "dict.xls";
@@ -222,7 +223,7 @@ export default class Dictionary extends React.Component {
             XLSX.utils.book_append_sheet(wb, ws, sheetName);
             XLSX.writeFile(wb, filename);
             message.success("文件导出成功!",1)
-          }} >导出</Button>
+          }} >导出</a>
         </Space>
         },
       },
@@ -237,7 +238,7 @@ export default class Dictionary extends React.Component {
           abbreviations: string[];
         }
     return(
-      <div style={{backgroundColor:'white', marginTop:'-0.8rem', marginLeft:'-0.8rem', width:'90rem', height:'40rem'}}>
+      <div style={{backgroundColor:'white', marginTop:'0.5rem', marginLeft:'0.5rem', width:'90rem', height:'40rem'}}>
         <Spin 
           tip="获取数据中"
           spinning={!this.state.firstGetState}
