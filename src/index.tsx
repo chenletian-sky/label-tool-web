@@ -14,6 +14,7 @@ import reducer from './reducer'
 import './rem' //导入Rem配置
 import './index.css';
 
+
 ReactDOM.render(
   <BrowserRouter>
     <React.StrictMode>
@@ -30,3 +31,5 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+// o
