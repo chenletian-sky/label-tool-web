@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
 //antd组件库
-import {Button, Table, Form, Input, Slider} from 'antd';
+import {Button, Table, Form, Input, Slider, Dropdown, Menu} from 'antd';
+import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import '../current/current'
-import MarkView from './MarkView'
+import TrainMarkView from './TrainMarkView'
+import { LoadingDataType, StoreType } from '../../types/propsTypes';
+import { connect } from 'react-redux';
 
 interface WordRecognitionProps {
-
+  
 }
 interface WordRecognitionState {
 
@@ -16,6 +19,13 @@ class WordRecognition extends Component<WordRecognitionProps, WordRecognitionSta
   }
   
   public render(): JSX.Element{
+    const menu = (
+      <Menu>
+        <Menu.Item key="1">
+          BiLSTM
+        </Menu.Item>
+      </Menu>
+    );
     return(
       <div>
         <Form
@@ -30,15 +40,21 @@ class WordRecognition extends Component<WordRecognitionProps, WordRecognitionSta
               marginTop:'1rem'
             }}
           >
-            <Input />
+            <Dropdown overlay={menu}>
+              <Button style={{
+                marginLeft: '-16.5rem'
+              }}>
+                BiLSTM<DownOutlined />
+              </Button>
+            </Dropdown>
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="权重路径"
             name="path"
             rules={[{ required: true}]}
           >
             <Input />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             label="语料数据"
             name="texts"
@@ -68,9 +84,10 @@ class WordRecognition extends Component<WordRecognitionProps, WordRecognitionSta
               }}>导出</Button>
           </Form.Item>
         </Form>
-        <MarkView></MarkView>
+        <TrainMarkView></TrainMarkView>
       </div>
     )
   }
 }
+
 export default WordRecognition;

@@ -287,7 +287,6 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
                 pagination={{
                   hideOnSinglePage:true
                 }}
-                 
 
               />
         </ProCard>
