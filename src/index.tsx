@@ -13,7 +13,7 @@ import { createStore } from 'redux'
 import reducer from './reducer'
 import './rem' //导入Rem配置
 import './index.css';
-
+// zhengdian test
 ReactDOM.render(
   <BrowserRouter>
     <React.StrictMode>
