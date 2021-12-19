@@ -14,6 +14,8 @@ import reducer from './reducer'
 import './rem' //导入Rem配置
 import './index.css';
 // zhengdian test
+
+// test chenletian
 ReactDOM.render(
   <BrowserRouter>
     <React.StrictMode>
