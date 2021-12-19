@@ -7,8 +7,8 @@ import { StoreType , LoadingDataType } from '../types/propsTypes'
 
 const initStore:StoreType ={
   LoadingDataCom: {
-    dictionarySelectObject:{},
-    textsSelectObject:{}
+    dictionarySelectObject:{selectedRowKeys: [], selectedRows: [] },
+    textsSelectObject:{selectedRowKeys: [], selectedRows: [] }
   }
 }
 
