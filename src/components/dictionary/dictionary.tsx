@@ -238,7 +238,7 @@ export default class Dictionary extends React.Component {
           abbreviations: string[];
         }
     return(
-      <div style={{backgroundColor:'white', marginTop:'0.5rem', marginLeft:'0.5rem', width:'90rem', height:'40rem'}}>
+      <div style={{backgroundColor:'white', marginTop:'-0.8rem', marginLeft:'-0.8rem', width:'90rem', height:'40rem'}}>
         <Spin 
           tip="获取数据中"
           spinning={!this.state.firstGetState}

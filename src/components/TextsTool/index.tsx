@@ -198,7 +198,7 @@ export default class TextsTool extends Component<Props, stateType> {
     const {data} = this.state.dataSource[this.state.showDataKey];
     const {showDataKey} = this.state;
     return(
-      <div style={{backgroundColor:'white', marginTop:'0.5rem', marginLeft:'0.5rem', width:'90rem', height:'40rem'}}>
+      <div style={{backgroundColor:'white', marginTop:'-0.8rem', marginLeft:'-0.8rem', width:'90rem', height:'40rem'}}>
         <Spin 
           tip="获取数据中"
           spinning={!this.state.firstGetState}
