@@ -1,0 +1,101 @@
+.default-table {
+  width: calc(~'100% - 12px');
+  height: calc(~'100% - 40px');
+  margin-right: 12px;
+  background: #ffffff;
+  box-shadow: 0 1px 4px 0 rgba(116, 116, 116, 0.4);
+
+  .content {
+    height: 100%;
+    background: #f0f2f5;
+
+    .table-container {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      padding: 1px;
+
+      .query-panel {
+        width: 100%;
+        height: 50px;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .big-query-panel {
+        height: 100px;
+        padding-right: 40px;
+        display: flex;
+        align-items: center;
+
+        > .ant-form {
+          width: 100%;
+
+          .ant-form-item {
+            margin-bottom: 0;
+          }
+        }
+      }
+
+      .table-pagination {
+        height: calc(~'100% - 50px');
+        padding: 0 25px;
+
+        .ant-table-wrapper {
+          height: 100%;
+
+          .row-selected {
+            background: #e6f7ff;
+          }
+
+          .ant-spin-nested-loading,
+          .ant-spin-container {
+            height: 100%;
+
+            .ant-table {
+              height: calc(~'100% - 60px');
+              // border-bottom: 1px solid #d9d9d9;
+
+              .ant-table-thead > tr > th {
+                background: #f4f6fc;
+                font-size: 16px;
+                color: #333333;
+                height: 60px;
+                padding: 10px;
+                text-align: center;
+              }
+
+              .ant-table-thead
+                > tr
+                > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+                display: none;
+              }
+
+              .ant-table-tbody > tr > td {
+                font-size: 14px;
+                color: #333333;
+                height: 60px;
+                padding: 10px;
+                text-align: center;
+              }
+            }
+
+            .ant-table-pagination.ant-pagination {
+              font-size: 12px;
+              margin: 14px 15px;
+              display: flex;
+              justify-content: center;
+
+              .ant-select,
+              .ant-select-dropdown {
+                font-size: 12px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,13 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { BrowserRouter } from 'react-router-dom'
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+//antd
+import 'antd/dist/antd.css'
+import '@ant-design/pro-card/dist/card.css';
+import '@ant-design/pro-layout/dist/layout.css';
+// redux
+import { Provider } from 'react-redux';
+import { createStore } from 'redux'
+import reducer from './reducer'
+import './rem' //导入Rem配置
+import './index.css';
+
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <React.StrictMode>
+      <Provider store={createStore(reducer)}>
+        <App />
+      </Provider>
+      
+    </React.StrictMode>
+  </BrowserRouter>,
   document.getElementById('root')
 );
 
