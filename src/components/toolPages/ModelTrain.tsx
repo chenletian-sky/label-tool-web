@@ -7,7 +7,7 @@ import {Button, Table, Form, Input, Slider,Space, message} from 'antd';
 import '../current/current'
 import MarkView from './MarkView'
 import axios from 'axios';
-type EChartsOptions = echarts.EChartsOption;    //版本太高会报错
+type EChartsOptions = echarts.EChartOption;    //版本太高会报错
 
 interface ModelTrainProps {
 
