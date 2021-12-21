@@ -48,7 +48,7 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
 					return (
 						<div 
 							style={{
-								fontSize:"20px"
+								fontSize:'1rem'
 							}}
 						onMouseUp={
 							() => {
@@ -185,10 +185,10 @@ class MarkView extends Component<MarkViewProps, MarkViewState>{
           columns={this.columns} 
           dataSource={this.state.data ? this.state.data : []} 
           size='small' 
-					scroll={{ y:`calc(40vh - 160px)`  }}
+					// scroll={{ y:`calc(40vh - 160px)`  }}
 					pagination={{
 						// pageSize: this.props.PageSizeNeedChange && this.props.PageSizeNeedChange < 12 ? this.props.PageSizeNeedChange : 12 ,
-						pageSize:10,
+						pageSize:4,
             current,
 						simple: true,
 						position: ['bottomRight'],

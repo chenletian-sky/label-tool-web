@@ -54,46 +54,6 @@ class TrainMarkView extends Component<TrainMarkViewProps, TrainMarkViewState>{
 							style={{
 								fontSize:"1rem"
 							}}
-					
-						// onMouseUp={
-						// 	() => {
-						// 		let start = Math.min(this.startIndex, this.endIndex)
-						// 		let end = Math.max(this.startIndex, this.endIndex)
-						// 		if (text.slice(start, end + 1).map((font: FontObject) => font['text']).join('').includes(getSelection()?.toString() as string) && getSelection()?.toString()) {
-									
-						// 			const textBySelect: string = getSelection()?.toString() as string;
-									
-						// 			start = start + text.slice(start, end + 1).map((font: FontObject) => font['text']).join('').indexOf(textBySelect);
-						// 			end = start + textBySelect.length - 1;
-									
-						// 			let startIndex = data[current * 10 - 10 + index]['textArr'][start]['start']
-
-						// 			data[current * 10 - 10 + index]['textArr'].splice(start, end + 1 - start)
-						// 			data[current * 10 - 10 + index]['textArr'].splice(start, 0, {
-						// 				text: textBySelect,
-						// 				start: startIndex,
-						// 				end: startIndex + textBySelect.length - 1,
-						// 				label: 'uncertain',
-						// 				color: 'blue',
-						// 				// _id: Number(Math.random().toString().substr(3, 10) + Date.now()).toString(36)
-						// 			})
-                  
-						// 			// updateMarkTextData([...data])
-						// 			// updateTextsData([...data])
-
-						// 			// labelRecord[current * 10 - 10 + index].push({
-						// 			// 	start: startIndex,
-						// 			// 	end: endIndex,
-						// 			// 	label: 'none',
-            //       //   text: textBySelect,
-            //       //   color: 'blue'
-						// 			// })
-            //       // updateMarkRecord([...labelRecord])
-						// 		}
-						// 		getSelection()?.removeAllRanges()
-						// 		this.startIndex = this.endIndex = -1
-						// 	}
-						// }
 						>
 							{
 								text.map((value: FontObject, i: number) => {
@@ -124,46 +84,12 @@ class TrainMarkView extends Component<TrainMarkViewProps, TrainMarkViewState>{
 									else {
 										return (
 											// color={value['color']}
-											<Tag key={i} color={value['color']} closable
-												icon={<Icon component={SettingIcon} onClick={
-													() => {
-														
-													}
-												} />}
+											<Tag key={i} color={value['color']}
+												icon={<Icon component={SettingIcon}/>}
+												closable={false}
 												style={{
 													marginLeft: '5px'
-												}} onClose={
-													() => {
-														// const { data, current, updateMarkTextData } = this.props
-														const arr: Array<FontObject> = value['text'].split('').map((str: string, index: number) => ({
-															text: str,
-															start: value['start'] + index,
-															end: value['start'] + index,
-															label: 'none',
-															color: 'blue'
-														}))
-														data[current * 10 - 10 + index]['textArr'].splice(i, 1)
-														// console.log(v, v.split(''));
-														data[current * 10 - 10 + index]['textArr'].splice(i, 0, ...arr)
-														// delete nameToColor[value]
-                            // labelRecord[current * 10 - 10 + index] = labelRecord[current * 10 - 10 + index].filter((value: { start: number; end: number; label: string; text: string; color: string }) => (
-                            //   value['text'] !== v
-                            // ))
-                            // console.log('.....', labelRecord)
-                            // labelRecord[current * 10 - 10 + index].splice(j, 1)
-                            // updateMarkRecord(labelRecord)
-
-                            axios.post(`${PATH}/mongo/markTexts/update`,[...data]).then((res:AxiosResponse<any,any>) => {
-                              if(res.data.status === 200){
-                                message.success("更新标注数据成功！")
-                              }
-                            })
-														// updateMarkTextData([...data])
-														// updateTextsData([...data])
-														
-                            // this.setState({  })
-													}
-												}>
+												}} >
 												{value['text']}
 											</Tag>
 										)
@@ -198,7 +124,7 @@ class TrainMarkView extends Component<TrainMarkViewProps, TrainMarkViewState>{
           sticky = {false}
 					scroll={{y:`calc(48vh)`}}
 					pagination={{
-						pageSize:10,
+						pageSize:5,
             current,
 						simple: true,
 						position: ['bottomRight'],

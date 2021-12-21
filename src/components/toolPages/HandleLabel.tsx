@@ -468,11 +468,11 @@ class HandleLabel extends Component<HandleLabelProps, HandleLabelState>{
                   // top: "10px"
                   // left:"24px"
                 }}
-                scroll={{y:`calc(10vh)`}}
+                // scroll={{y:`calc(10vh)`}}
                 columns={this.state.columns as ColumnsType<any>}
                 rowKey={'key'}
                 dataSource={this.state.labelData as readonly any[] | undefined}
-                pagination={false}
+                pagination={{pageSize:1,}}
               />
             </div>
           </ProCard>
