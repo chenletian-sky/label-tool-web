@@ -6,6 +6,7 @@ export interface StoreType{
 }
 
 export interface LoadingDataType{
+  selectedRowKeys: any
   dictionarySelectObject?:{selectedRowKeys:Array<any>,selectedRows:Array<any>}
   textsSelectObject?:{selectedRowKeys:Array<any>,selectedRows:Array<any>}
 }
