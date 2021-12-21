@@ -7,7 +7,7 @@ import {Button, Table, Form, Input, Slider,Space, message} from 'antd';
 import '../current/current'
 import MarkView from './MarkView'
 import axios from 'axios';
-type EChartsOptions = echarts.EChartOption;    //版本太高会报错
+// type EChartsOptions = echarts.EChartOption;    //版本太高会报错
 
 interface ModelTrainProps {
 
@@ -46,7 +46,7 @@ class ModelTrain extends Component<ModelTrainProps, ModelTrainState>{
       }
     }
     
-    const option: EChartsOptions = {
+    const option: any = {
         title: {
             text: '准确率',
             textStyle: {

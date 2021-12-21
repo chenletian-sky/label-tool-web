@@ -26,7 +26,7 @@ class WordRecognition extends Component<WordRecognitionProps, WordRecognitionSta
   }
 
   public componentDidMount() {
-    const AllTextsData = this.props.LoadingDataCom.textsSelectObject.selectedRows
+    const AllTextsData = (this.props.LoadingDataCom.textsSelectObject as any).selectedRows
     let {texts} = this.state
     // console.log(AllTextsData)
     for(let i = 0; i < AllTextsData.length; i++) {
@@ -85,8 +85,10 @@ class WordRecognition extends Component<WordRecognitionProps, WordRecognitionSta
             <Slider key='Slider' defaultValue={30} 
               onChange = 
               {
-                (value) => {
-                  this.state.SliderVal = value
+                (value:any) => {
+                  this.setState({
+                    SliderVal:value.target.value
+                  })
                 }
               }/>
             <Button
