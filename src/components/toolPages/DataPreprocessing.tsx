@@ -8,6 +8,8 @@ import axios, { AxiosResponse } from 'axios';
 import { PATH } from '../../types/actionTypes';
 import MyScatterChart from './DataVisual/MyScatterChart';
 import MyWordsCloud from './DataVisual/MyWordsCloud';
+import { AnyMxRecord } from 'dns';
+import ShowMarkTexts from '../ShowView/ShowMarkTexts';
 
 const {Column} = Table
 
@@ -18,7 +20,10 @@ interface DataPreprocessingProps {
 interface DataPreprocessingState {
   inputValue:number,
   selectButton:String,
-  completeArray:Array<number>
+  completeArray:Array<number>,
+  afterSamplingTextsData:Array<any>,
+  afterMatchTextsData:Array<any>,
+  isComplete:boolean
 }
 class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocessingState>{
   public constructor(props: DataPreprocessingProps) {
@@ -29,7 +34,10 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
       // completeArray:[],
       // markTextData:[],
       selectButton:"",
-      completeArray:[]
+      completeArray:[],
+      afterSamplingTextsData:[],
+      afterMatchTextsData:[],
+      isComplete:false
     }
   }
 
@@ -81,7 +89,7 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
         dataIndex: 'action',
         key: 'action',
         
-        render: (number: any,r: any,index: any) => {
+        render: (text: any,record: any,index: any) => {
           return<Space>
             <a
               onClick={()=>{
@@ -92,7 +100,67 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
 
             >导出</a>
             <a
-              
+              onClick={() => {
+                this.props.LoadingDataCom.textsSelectObject?.selectedRows.map((value,index) => {
+                  let postObject = {}
+                  postObject = {
+                    dictKey:record.key,
+                    textsKey:value.key
+                  }
+                  console.log("postObject",postObject,record)
+                  axios.post(`${PATH}/mongo/utils/dbDictSplit`,postObject).then((res:AxiosResponse<any,any>) => {
+                    if(res.data.status === 200 ){
+                      message.success("字典匹配成功")
+
+                      axios.get(`${PATH}/mongo/xferStations/all`).then((res:AxiosResponse<any,any>) => {
+                        if(res.data.status === 200 ){
+                          message.success("成功获取")
+
+                          // console.log("xferStation",res.data.data.data)
+                          let fileData = res.data.data.data
+                                      
+                          const after =  fileData.map((value:any, i: string)=>{
+                            let returnValue = {
+                                text: value['text'],
+                                key: Number(Math.random().toString().substr(3, 10) + Date.now()).toString(36),
+                                textArr: value['text'].split('').map((v: any, index: any) => ({
+                                    text: v,
+                                    start: index,
+                                    end: index,
+                                    label: 'none',
+                                    color: '',
+                                }))
+                            }
+                            for(let i = value['labels'].length - 1; i >= 0; i--) {
+                                const { start, end, label } = value['labels'][i]
+                                // console.log("each",start,end,label)
+                                returnValue['textArr'].splice(start, end - start)
+                                returnValue['textArr'].splice(start, 0, {
+                                    text: value['text'].slice(start, end),
+                                    start,
+                                    end: end - 1,
+                                    label,
+                                    color:'#d1c7b7'
+                                })
+                            }
+
+                            return returnValue
+                          })
+                          this.setState({
+                            afterMatchTextsData:after
+                          })
+
+                          axios.post(`${PATH}/mongo/markTexts/upload`,after).then((res:AxiosResponse<any,any>) => {
+                            if(res.data.status === 200 ){
+                              message.success("上传标注数据成功")
+                            }
+                          })
+                        }
+                      })
+                    }
+                  })
+                })
+              }}
             >匹配</a>
           </Space>
         }
@@ -132,6 +200,9 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
                   if(res.data.status === 200 ){
                     message.success("dec2vec模型调用成功") 
 
+                    this.setState({
+                      isComplete:true
+                    })
                     // axios
                   }
                 })
@@ -287,10 +358,29 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
                   onClick={() => {
                     // console.log("button",this.state.inputValue,
                     // textsSelectObject?.selectedRows)
-                    // let frequency = this.state.inpu*0.01
-                    axios.get(`${PATH}/mongo/texts/all`).then((res:AxiosResponse<any,any>) => {
-                      const allTexts =  res.data.data.data
-                      
+                    
+                    let allNumber = 0
+                    
+                    let allTextsKey: any[] = []
+                    this.props.LoadingDataCom.textsSelectObject?.selectedRows.map((value,index) => {
+                      allTextsKey.push(value.key)
+                      allNumber += value.data.length
+                    })
+                    let frequency = Math.round( this.state.inputValue*0.01*allNumber )
+                    console.log(frequency)
+                    let temptData: any[] = []
+                    let count = 0
+                    this.props.LoadingDataCom.textsSelectObject?.selectedRows.map((value,index) => {
+                      value.data.map((textObj: any,textIndex: any) => {
+                        if(count < frequency){
+                          temptData.push(textObj)
+                          count ++
+                        }
+                      })
+                    })
+                    console.log("tempData",temptData)
+                    this.setState({
+                      afterSamplingTextsData:temptData
                     })
                   }}
                 >采样</Button>
@@ -327,10 +417,14 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
               split='vertical'
             >
               <ProCard>
-                <MyScatterChart></MyScatterChart>
+                {
+                  this.state.isComplete ? <MyScatterChart></MyScatterChart> : null
+                }
               </ProCard>
               <ProCard>
-                <MyWordsCloud></MyWordsCloud>
+                {
+                  this.state.isComplete ? <MyWordsCloud></MyWordsCloud> : null
+                }
               </ProCard>
             </ProCard>
           </ProCard.TabPane>
@@ -338,43 +432,30 @@ class DataPreprocessing extends Component<DataPreprocessingProps, DataPreprocess
               <Table
                 size='small'
                 id="ant-table"
+                dataSource={this.state.afterSamplingTextsData ? this.state.afterSamplingTextsData : []}
                 // columns={this.state.columns as ColumnsType<any>}
                 rowKey={'key'}
                 scroll={{
+                  y:`calc(15vh)`
                 }}
                 
                 // pagination={this.state.myPagination}
                 style={{ width: '100%' }}
-            > 
-              <Column
-                title="文本"
-                width={'100%'}
-                align='center'
-                dataIndex={'text'}
-                key="text"
-              ></Column>
-              {/* <Column
-                title="操作"
-                width={'20%'}
-                align='center'
-                dataIndex={'action'}
-                
-                render={(text,record,index) => {
-
-                  return <Space>
-                  <a
-                    onClick={()=>{
-                      console.log("@@@",text,record,index)
-                    }}
-                  >查看</a>
-                  <a>导出</a>
-                </Space>
-                }}
-              ></Column> */}
-            </Table>
+              > 
+                <Column
+                  title="文本"
+                  width={'100%'}
+                  align='left'
+                  
+                  dataIndex={'text'}
+                  key="text"
+                ></Column>
+              </Table>
           </ProCard.TabPane>
           <ProCard.TabPane key="after" tab="字典匹配">
-            dict
+            <ShowMarkTexts
+              data={this.state.afterMatchTextsData ? this.state.afterMatchTextsData : []}
+            ></ShowMarkTexts>
           </ProCard.TabPane>
           
         </ProCard>

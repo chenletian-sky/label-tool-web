@@ -103,7 +103,7 @@ class MyWordsCloud extends Component<MyWordsCloudProps, MyWordsCloudState>{
     axios.get(`${PATH}/mongo/wordCloudData/all`).then((res:AxiosResponse<any,any>) => {
       if(res.data.status === 200) {
         // message.success("获取词云数据成功")
-        console.log("wordsCloud",res.data.data.data)
+        // console.log("wordsCloud",res.data.data.data)
         this.setState({
           WordsCloudData:res.data.data.data
         })

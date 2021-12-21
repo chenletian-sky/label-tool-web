@@ -100,16 +100,17 @@ class MyScatterChart extends Component<MyScatterChartProps, MyScatterChartState>
 
         axios.get(`${PATH}/mongo/scatterData/all`).then((res:AxiosResponse<any,any>) => {
             if(res.data.status === 200 ){
-                console.log("scatterData",res.data.data)
-                this.setState({
-                    scatter_data:res.data.data.data
-                })
+                // console.log("scatterData",res.data.data)
+                this.setState({scatter_data:res.data.data.data})
+                // res.data.data ?( res.data.data.data ? this.setState({scatter_data:res.data.data.data}) : null )  : null 
+                this.draw_circle()
             }
         })
-        this.draw_circle()
+        
     }
 
     componentDidUpdate() {
+        // this.state.scatter_data ?  this.draw_circle() : null
         this.draw_circle()
     }
 
