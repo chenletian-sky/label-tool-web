@@ -142,7 +142,7 @@ class WordRecognition extends Component<WordRecognitionProps, WordRecognitionSta
                   
                   
                   
-                  axios.post(`${PATH}/mongo/utils/dbDictSplit`, {dictKey:this.props.LoadingDataCom.selectedRowKeys[0],textsKey:"-200"})
+                  axios.post(`${PATH}/mongo/utils/dbDictSplit`, {dictKey:this.props.LoadingDataCom.dictionarySelectObject?.selectedRowKeys[0].key,textsKey:"-200"})
                     .then((res:AxiosResponse<any, any>) => {
                       if(res.data.status === 200)
                       console.log("2")
@@ -158,7 +158,35 @@ class WordRecognition extends Component<WordRecognitionProps, WordRecognitionSta
                   axios.get(`${PATH}/mongo/xferStations/all`)
                     .then((res:AxiosResponse<any, any>) => {
                       console.log(res.data.data.data.now)
-                      this.setState({MarkTexts: res.data.data.data.now})
+                      const fileData = res.data.data.data.now
+                      const after =  fileData.map((value:any, i: string)=>{
+                        let returnValue = {
+                            text: value['text'],
+                            key: Number(Math.random().toString().substr(3, 10) + Date.now()).toString(36),
+                            textArr: value['text'].split('').map((v: any, index: any) => ({
+                                text: v,
+                                start: index,
+                                end: index,
+                                label: 'none',
+                                color: '',
+                            }))
+                        }
+                        for(let i = value['labels'].length - 1; i >= 0; i--) {
+                            const { start, end, label } = value['labels'][i]
+                            // console.log("each",start,end,label)
+                            returnValue['textArr'].splice(start, end - start)
+                            returnValue['textArr'].splice(start, 0, {
+                                text: value['text'].slice(start, end),
+                                start,
+                                end: end - 1,
+                                label,
+                                // color:'#d1c7b7'
+                            })
+                        }
+
+                        return returnValue
+                      })
+                      this.setState({MarkTexts: after})
                   })
                   console.log(this.state.MarkTexts,"8888")
                   // this.setState({MarkTexts:})
@@ -167,7 +195,9 @@ class WordRecognition extends Component<WordRecognitionProps, WordRecognitionSta
             >识别</Button>
           </Form.Item>
         </Form>
-        <TrainMarkView MarkTexts={[...this.state.MarkTexts]}></TrainMarkView>
+        <TrainMarkView 
+          MarkTexts={this.state.MarkTexts}
+        ></TrainMarkView>
       </div>
     )
   }

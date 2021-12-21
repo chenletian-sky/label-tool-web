@@ -196,6 +196,7 @@ class TrainMarkView extends Component<TrainMarkViewProps, TrainMarkViewState>{
           dataSource={this.props.MarkTexts.length !== 0 ? [...this.props.MarkTexts] : []} 
           size='small' 
           sticky = {false}
+					scroll={{y:`calc(48vh)`}}
 					pagination={{
 						pageSize:10,
             current,
