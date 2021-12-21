@@ -100,7 +100,7 @@ class TrainMarkView extends Component<TrainMarkViewProps, TrainMarkViewState>{
                   // console.log('r', labelRecord)
                   // const recordIndex = labelRecord[current * 10 - 10 + index].findIndex((r: { start: number; end: number; label: string; text: string; color: string }) => r['text'] === value )
 									if (!value['text']) return '';
-									// if (value['text'].length <= 1 && value['label'] === 'none') {
+									if (value['text'].length <= 1 && value['label'] === 'none') {
 										return (
 											<div key={i} style={{
 												display: 'inline-block',
@@ -120,54 +120,54 @@ class TrainMarkView extends Component<TrainMarkViewProps, TrainMarkViewState>{
 												{value['text']}
 											</div>
 										)
-									// } 
-									// else {
-									// 	return (
-									// 		// color={value['color']}
-									// 		<Tag key={i} color={value['color']} closable
-									// 			icon={<Icon component={SettingIcon} onClick={
-									// 				() => {
+									} 
+									else {
+										return (
+											// color={value['color']}
+											<Tag key={i} color={value['color']} closable
+												icon={<Icon component={SettingIcon} onClick={
+													() => {
 														
-									// 				}
-									// 			} />}
-									// 			style={{
-									// 				marginLeft: '5px'
-									// 			}} onClose={
-									// 				() => {
-									// 					// const { data, current, updateMarkTextData } = this.props
-									// 					const arr: Array<FontObject> = value['text'].split('').map((str: string, index: number) => ({
-									// 						text: str,
-									// 						start: value['start'] + index,
-									// 						end: value['start'] + index,
-									// 						label: 'none',
-									// 						color: 'blue'
-									// 					}))
-									// 					data[current * 10 - 10 + index]['textArr'].splice(i, 1)
-									// 					// console.log(v, v.split(''));
-									// 					data[current * 10 - 10 + index]['textArr'].splice(i, 0, ...arr)
-									// 					// delete nameToColor[value]
-                  //           // labelRecord[current * 10 - 10 + index] = labelRecord[current * 10 - 10 + index].filter((value: { start: number; end: number; label: string; text: string; color: string }) => (
-                  //           //   value['text'] !== v
-                  //           // ))
-                  //           // console.log('.....', labelRecord)
-                  //           // labelRecord[current * 10 - 10 + index].splice(j, 1)
-                  //           // updateMarkRecord(labelRecord)
+													}
+												} />}
+												style={{
+													marginLeft: '5px'
+												}} onClose={
+													() => {
+														// const { data, current, updateMarkTextData } = this.props
+														const arr: Array<FontObject> = value['text'].split('').map((str: string, index: number) => ({
+															text: str,
+															start: value['start'] + index,
+															end: value['start'] + index,
+															label: 'none',
+															color: 'blue'
+														}))
+														data[current * 10 - 10 + index]['textArr'].splice(i, 1)
+														// console.log(v, v.split(''));
+														data[current * 10 - 10 + index]['textArr'].splice(i, 0, ...arr)
+														// delete nameToColor[value]
+                            // labelRecord[current * 10 - 10 + index] = labelRecord[current * 10 - 10 + index].filter((value: { start: number; end: number; label: string; text: string; color: string }) => (
+                            //   value['text'] !== v
+                            // ))
+                            // console.log('.....', labelRecord)
+                            // labelRecord[current * 10 - 10 + index].splice(j, 1)
+                            // updateMarkRecord(labelRecord)
 
-                  //           axios.post(`${PATH}/mongo/markTexts/update`,[...data]).then((res:AxiosResponse<any,any>) => {
-                  //             if(res.data.status === 200){
-                  //               message.success("更新标注数据成功！")
-                  //             }
-                  //           })
-									// 					// updateMarkTextData([...data])
-									// 					// updateTextsData([...data])
+                            axios.post(`${PATH}/mongo/markTexts/update`,[...data]).then((res:AxiosResponse<any,any>) => {
+                              if(res.data.status === 200){
+                                message.success("更新标注数据成功！")
+                              }
+                            })
+														// updateMarkTextData([...data])
+														// updateTextsData([...data])
 														
-                  //           // this.setState({  })
-									// 				}
-									// 			}>
-									// 			{value['text']}
-									// 		</Tag>
-									// 	)
-									// }
+                            // this.setState({  })
+													}
+												}>
+												{value['text']}
+											</Tag>
+										)
+									}
 								})
 							}
 						</div>

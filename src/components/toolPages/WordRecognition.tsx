@@ -173,7 +173,7 @@ class WordRecognition extends Component<WordRecognitionProps, WordRecognitionSta
                         }
                         for(let i = value['labels'].length - 1; i >= 0; i--) {
                             const { start, end, label } = value['labels'][i]
-                            // console.log("each",start,end,label)
+                            console.log("each",start,end,label)
                             returnValue['textArr'].splice(start, end - start)
                             returnValue['textArr'].splice(start, 0, {
                                 text: value['text'].slice(start, end),

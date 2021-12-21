@@ -111,10 +111,7 @@ class LoadingData extends Component<LoadingDataProps, LoadingDataState>{
                 id="ant-table"
                 rowKey={'key'}
                 dataSource={dictionariesData}
-                scroll={{
-                  y:`calc(20vh - 28px)`
-                  // y:"100px"
-                }}
+                sticky = {false}
                 pagination={{
                   ...this.state.myPagination,
                   hideOnSinglePage:true,
@@ -205,10 +202,7 @@ class LoadingData extends Component<LoadingDataProps, LoadingDataState>{
                   // scroll={{y:this.state.yScroll as string}}
                   rowKey={'key'}
                   dataSource={dictionaryDetail ? (dictionaryDetail as DictionaryDetailDataType).data as Array<any> : []}
-                  scroll={{
-                    y:`calc(20vh - 28px)`
-                    // y:"100px"
-                  }}
+                  sticky = {false}
                   pagination={this.state.myPagination}
 
                   
@@ -311,6 +305,7 @@ class LoadingData extends Component<LoadingDataProps, LoadingDataState>{
                   id="ant-table"
                   rowKey={'key'}
                   dataSource={textsData}
+                  sticky = {false}
                   pagination={
                     {
                       ...this.state.myPagination,
@@ -389,6 +384,7 @@ class LoadingData extends Component<LoadingDataProps, LoadingDataState>{
                       
                     }}
                     
+                    sticky = {false}
                     pagination={this.state.myPagination}
                     style={{ width: '100%' }}
                 > 
