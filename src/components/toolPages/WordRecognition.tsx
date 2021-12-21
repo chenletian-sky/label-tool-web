@@ -6,6 +6,9 @@ import '../current/current'
 import TrainMarkView from './TrainMarkView'
 import { LoadingDataType, StoreType } from '../../types/propsTypes';
 import { connect } from 'react-redux';
+import axios, { AxiosResponse } from 'axios';
+import { PATH } from '../../types/actionTypes';
+import { error } from 'console';
 
 interface WordRecognitionProps {
   LoadingDataCom:LoadingDataType
@@ -48,6 +51,7 @@ class WordRecognition extends Component<WordRecognitionProps, WordRecognitionSta
         </Menu.Item>
       </Menu>
     );
+    // console.log(this.state.MarkTexts)
     return(
       <div>
         <Form
@@ -106,7 +110,9 @@ class WordRecognition extends Component<WordRecognitionProps, WordRecognitionSta
                     
                     MarkTexts.push(this.state.texts[RandomVal])
                   }
-                  this.setState({MarkTexts: MarkTexts})
+                  // console.log("this.state.texts",this.state.texts)
+                  // console.log("MarkTexts",MarkTexts)
+                  this.setState({MarkTexts: [...MarkTexts]})
                   // console.log(this.state.MarkTexts)
                 }
               }>采样</Button>
@@ -116,10 +122,52 @@ class WordRecognition extends Component<WordRecognitionProps, WordRecognitionSta
                 position: 'absolute',
                 marginTop: '-2rem',
                 marginLeft: '21.5rem'
-              }}>识别</Button>
+              }}
+              onClick={
+                () => {     
+                  console.log("1")
+                  // console.log(this.props.LoadingDataCom)
+                  const upLoadData = {
+                      key:-200,
+                      textsName:'RecognitionTexts',
+                      textsDescribe:'test',
+                      textsContent:'100kb',
+                      data:this.state.MarkTexts,
+                      wordsNum:1000,
+                    }
+                  // axios.post(`http://101.35.15.228:8080/mongo/texts/upload`, upLoadData)
+                  //   .then((res:AxiosResponse<any, any>) => {
+                  // })
+                  console.log(`${PATH}/mongo/utils/dbDictSplit`);
+                  
+                  
+                  
+                  axios.post(`${PATH}/mongo/utils/dbDictSplit`, {dictKey:this.props.LoadingDataCom.selectedRowKeys[0],textsKey:"-200"})
+                    .then((res:AxiosResponse<any, any>) => {
+                      if(res.data.status === 200)
+                      console.log("2")
+                      console.log("2")
+                  })
+                  .catch((error)=>{
+                    console.log(error);
+                  })
+                  axios.post(`${PATH}/mongo/utils/jiaguTrainModel`, {textsKey:"-200",numberOfTrainingIterations:-1})
+                    .then((res:AxiosResponse<any, any>) => {
+                      console.log("3")
+                  })
+                  axios.get(`${PATH}/mongo/xferStations/all`)
+                    .then((res:AxiosResponse<any, any>) => {
+                      console.log(res.data.data.data.now)
+                      this.setState({MarkTexts: res.data.data.data.now})
+                  })
+                  console.log(this.state.MarkTexts,"8888")
+                  // this.setState({MarkTexts:})
+                }
+              }
+            >识别</Button>
           </Form.Item>
         </Form>
-        <TrainMarkView MarkTexts={this.state.MarkTexts}></TrainMarkView>
+        <TrainMarkView MarkTexts={[...this.state.MarkTexts]}></TrainMarkView>
       </div>
     )
   }
